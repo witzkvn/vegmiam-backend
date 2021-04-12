@@ -27,13 +27,16 @@
     "graphql": "^15.5.0",
     "helmet": "^4.4.1",
     "hpp": "^0.2.3",
+    "html-to-text": "^7.0.0",
     "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "nodemailer": "^6.5.0",
+    "pug": "^3.0.2",
     "streamifier": "^0.1.1",
+    "validator": "^13.5.2",
     "xss-clean": "^0.1.1"
   }
 }
