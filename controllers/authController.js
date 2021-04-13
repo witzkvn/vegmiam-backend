@@ -58,7 +58,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     // role: req.body.role
   });
 
-  const url = `${req.protocol}://${req.get('host')}/me`;
+  // const url = `${req.protocol}://${req.get('host')}/me`;
+  const url = "https://vegmiam.herokuapp.com/"
   await new Email(newUser, url).sendWelcome()
 
   createAndSendToken(newUser, 201, req, res)
@@ -120,10 +121,26 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 })
 
+exports.onlyUserDoc = (Model) => catchAsync(async (req, res, next) => {
+  const doc = await Model.findById(req.params.id)
+
+  if (!doc) {
+    return next(new AppError('Aucun document trouvé avec cet ID.', 404))
+  }
+
+  if (!(doc.user._id && req.user._id && (doc.user._id.toString() === req.user._id.toString()))) {
+    return next(new AppError('Vous n\'avez pas la permission d\'accéder à ce document.', 403))
+  }
+
+  next()
+})
+
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles array, ex ['admin', 'moderator']
     // middleware protect that run before in pipeline set req.user, that is then accessible
+
+    console.log(...roles, req.user.role)
     if (!roles.includes(req.user.role)) {
       return next(new AppError("Vous n'avez pas la permission d'effectuer cette action.", 403))
     }

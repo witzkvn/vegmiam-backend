@@ -10,6 +10,7 @@ const compression = require('compression')
 const globalErrorHandler = require('./controllers/errorController')
 const AppError = require('./utils/appError')
 const userRouter = require('./routes/userRoutes')
+const recipesRouter = require('./routes/recipeRoutes')
 
 const app = express()
 app.enable('trust proxy');
@@ -36,14 +37,14 @@ app.use(cors())
 app.options('*', cors())
 
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan('common'))
+  app.use(morgan('dev'))
 }
 
 app.use(compression())
 
 // ROUTES
 app.use('/api/v1/users', userRouter);
-// app.use('/api/v1/recipes', recipesRouter);
+app.use('/api/v1/recipes', recipesRouter);
 
 app.use('/', function (req, res) {
   res.send('Bienvenue sur l\'API Vegmiam :)')
@@ -56,10 +57,5 @@ app.all('*', (req, res, next) => {
 
 // global error handler
 app.use(globalErrorHandler)
-
-module.exports = app;
-
-
-
 
 module.exports = app;
