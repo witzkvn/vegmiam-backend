@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const slugify = require('slugify')
 
 
 const recipeSchema = new mongoose.Schema({
@@ -8,6 +9,7 @@ const recipeSchema = new mongoose.Schema({
     maxLength: [120, "Votre titre doit faire moins de 120 caractères."],
     required: [true, "Merci de préciser un titre pour votre recette."]
   },
+  slug: String,
   description: {
     type: String,
     maxLength: [600, "Votre description doit faire au maximum 600 caractères."]
@@ -101,6 +103,11 @@ const recipeSchema = new mongoose.Schema({
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
+})
+
+recipeSchema.pre('save', function (next) {
+  this.slug = slugify(this.title, { lower: true })
+  next()
 })
 
 const Recipe = mongoose.model('Recipe', recipeSchema)

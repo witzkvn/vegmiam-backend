@@ -18,6 +18,7 @@ const createAndSendToken = (user, statusCode, req, res) => {
   // create unique signed jwt
   const token = signToken(user._id)
 
+  // cookie expire 90 days
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
     httpOnly: true,
@@ -140,7 +141,7 @@ exports.restrictTo = (...roles) => {
     // roles array, ex ['admin', 'moderator']
     // middleware protect that run before in pipeline set req.user, that is then accessible
 
-    console.log(...roles, req.user.role)
+
     if (!roles.includes(req.user.role)) {
       return next(new AppError("Vous n'avez pas la permission d'effectuer cette action.", 403))
     }
