@@ -21,11 +21,11 @@ app.use(helmet({ contentSecurityPolicy: false }));
 
 
 const limiter = rateLimit({
-  max: 120,
+  max: 300,
   windowMs: 60 * 60 * 1000,
   message: 'Trop de requêtes depuis votre adresse IP. Merci de réessayer dans une heure :)'
 });
-app.use('/api', limiter);
+// app.use('/api', limiter);
 app.use(express.json({
   limit: '10kb'
 }));

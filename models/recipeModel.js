@@ -12,17 +12,16 @@ const recipeSchema = new mongoose.Schema({
   slug: String,
   description: {
     type: String,
-    maxLength: [600, "Votre description doit faire au maximum 600 caractères."]
+    maxLength: [600, "La description de la recette doit faire au maximum 600 caractères."]
   },
   difficulty: {
     type: String,
     enum: {
       values: ["facile", "moyen", "difficile"],
-      message: 'La difficulté peut prendre les valeur "facile", "moyen" ou "difficile"'
+      message: 'La difficulté peut prendre les valeurs "facile", "moyen" ou "difficile"'
     },
     trim: true,
-    default: "moyen",
-    required: [true, "Merci de préciser un niveau de difficulté."]
+    default: "moyen"
   },
   images: [String],
   ratingsAverage: {
@@ -38,7 +37,7 @@ const recipeSchema = new mongoose.Schema({
   time: {
     type: Number,
     min: [0, "Le temps de préparation de la recette doit être supérieur à 0 minutes."],
-    max: [4320, "Sérieusement ? Qui a le temps de faire une recette sur plus de 3 jours ? Merci de sélectionner un temps inférieur à 4320 minutes."],
+    max: [4320, "Le temps de préparation d'une recette ne peut pas dépasser 3 jours. Merci de sélectionner un temps inférieur à 4320 minutes."],
     required: [true, "Merci de préciser un temps de préparation, en minutes."]
   },
   category: {
@@ -53,10 +52,11 @@ const recipeSchema = new mongoose.Schema({
   otherLink: {
     type: String,
     validate: function (link) {
+      if (!link) return true
       const regexRule = /^(http|https):\/\//;
-      return regexRule.test(link)
+      return regexRule.test(link) || ""
     },
-    message: "Merci de fournir un lien valide."
+    message: "Merci de fournir un lien valide pour le champs Lien Utile."
   },
   user: {
     type: mongoose.Schema.ObjectId,
@@ -72,17 +72,17 @@ const recipeSchema = new mongoose.Schema({
       {
         quantity: {
           type: Number,
-          min: [0, "La quantité ne peut pas être inférieure à 0."]
+          min: [0, "Une quantité pour un ingrédient ne peut pas être inférieure à 0."]
         },
         name: {
           type: String,
           trim: true,
-          maxLength: [36, "Le nom de votre ingrédient doit faire 36 caractères au maximum."],
-          required: [true, "Merci de préciser un nom pour l'ingrédient."]
+          maxLength: [36, "Le nom de vos ingrédients ne doivent pas dépasser 36 caractères."],
+          required: [true, "Merci de préciser un nom pour chaque ingrédient ajouté, ou de supprimer les champs inutilisés."]
         },
         unite: {
           type: String,
-          maxLength: [6, "L'unité ne peut pas dépasser 6 caractères."]
+          maxLength: [6, "L'unité d'un ingrédient ne peut pas dépasser 6 caractères."]
         }
       }
     ],
@@ -93,8 +93,8 @@ const recipeSchema = new mongoose.Schema({
       {
         description: {
           type: String,
-          minLength: [0, "Merci de compléter l'étape."],
-          maxLength: [800, "Le descriptif de votre étape ne peut pas dépasser 800 caractères. Merci de séparer l'étapes en plusieurs."],
+          minLength: [0, "Merci de compléter les descriptions de chaque étape ou de supprimer les étapes vides."],
+          maxLength: [800, "Le descriptif d'une étape ne peut pas dépasser 800 caractères. Merci de séparer les étapes trop longues en plusieurs."],
         }
       }
     ],

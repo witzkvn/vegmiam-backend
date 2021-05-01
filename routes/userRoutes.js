@@ -20,6 +20,8 @@ router.patch('/updateMyPassword', authController.updatePassword)
 router.patch('/updateMe', userController.uploadUserAvatar, userController.resizeUserAvatar, userController.updateMe)
 router.delete('/deleteMe', userController.deleteMe)
 
+router.get('/:id', userController.getUser)
+
 router.use(authController.restrictTo('admin')) // only admins will be able to use routes below : 
 
 router
@@ -29,7 +31,6 @@ router
 
 router
   .route('/:id')
-  .get(userController.getUser)
   .patch(userController.updateUser)
   .delete(userController.deleteUser)
 

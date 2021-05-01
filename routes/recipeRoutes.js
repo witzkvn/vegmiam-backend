@@ -12,22 +12,35 @@ router.use(authController.protect);
 router
   .route('/')
   .get(recipeController.getAllRecipes)
-  .post(recipeController.createRecipe)
+  .post(recipeController.uploadRecipeImages, recipeController.resizeRecipeImages, recipeController.createRecipe)
+
+
+router
+  .route('/fav')
+  .get(recipeController.getUserFavRecipes)
+
+router
+  .route('/fav/:id')
+  .get(recipeController.toggleFavoriteRecipe)
 
 router
   .route('/:id')
   .get(recipeController.getRecipe)
 
+// à faire recipes by user id
 router
   .route('/user/:userrecipesid')
   .get(recipeController.getAllRecipes)
 
-router.use('/:id', authController.onlyUserDoc(Recipe))
+// router.use('/modify/:id', authController.onlyUserDoc(Recipe))
 // all routes below have doc protection : requester can only manipulate his own documents
 router
-  .route('/:id')
-  .patch(recipeController.updateRecipe)
-  .delete(recipeController.deleteRecipe)
+  .route('/modify/:id')
+  .patch(authController.onlyUserDoc(Recipe), recipeController.updateRecipe)
+
+router
+  .route('/delete/:id')
+  .delete(authController.onlyUserDoc(Recipe), recipeController.deleteRecipe)
 
 
 

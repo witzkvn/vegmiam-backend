@@ -19,7 +19,10 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: 'default.jpg'
+    // default: 'default.jpg'
+  },
+  favorites: {
+    type: Array
   },
   settings: {
     theme: {
@@ -96,7 +99,7 @@ userSchema.pre('save', function (next) {
 userSchema.pre(/^find/, function (next) {
   // this = current query
   this.find({ active: { $ne: false } })
-  this.select('-__v')
+  // this.select('-__v')
   next()
 })
 

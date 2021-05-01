@@ -52,7 +52,7 @@ let uploadFromBuffer = (req, uniqueFileName) => {
       {
         public_id: `avatar/${uniqueFileName}`,
         tags: "avatar",
-        transformation: { width: 500, height: 500, crop: "fit", format: "jpg", quality: "auto" }
+        transformation: { width: 300, height: 300, crop: "fit", format: "jpg", quality: "auto" }
       },
       (error, result) => {
 
@@ -128,7 +128,7 @@ exports.createUser = (req, res) => {
 //######## GENERIC ROUTES
 
 exports.deleteUser = factory.deleteOne(User);
-exports.getUser = factory.getOne(User);
+exports.getUser = factory.getOne(User, null, 'avatar name +__v');
 exports.getAllUsers = factory.getAll(User);
 // Do NOT update password with this !
 exports.updateUser = factory.updateOne(User);

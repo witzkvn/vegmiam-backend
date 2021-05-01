@@ -35,7 +35,26 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
 
 });
 
-exports.createOne = Model => catchAsync(async (req, res, next) => {
+exports.createOne = (Model, addFieldOptions) => catchAsync(async (req, res, next) => {
+
+  if (req.user && addFieldOptions && addFieldOptions === "user") {
+    req.body.user = req.user;
+  }
+
+
+  if (req.body.ingredients) {
+    const parsedIng = JSON.parse(req.body.ingredients)
+    req.body.ingredients = parsedIng
+  }
+  if (req.body.ingredients) {
+    const parsedSteps = JSON.parse(req.body.steps)
+    req.body.steps = parsedSteps
+  }
+  console.log('req files images arr :', req.files.images)
+
+  if (req.files.images) {
+    req.body.images = req.files.images
+  }
 
   const doc = await Model.create(req.body);
 
@@ -47,9 +66,9 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
+exports.getOne = (Model, popOptions, limitFieldsOptions) => catchAsync(async (req, res, next) => {
 
-  let query = Model.findById(req.params.id);
+  let query = Model.findById(req.params.id).select(limitFieldsOptions);
   if (popOptions) query = query.populate(popOptions);
   const doc = await query;
 
@@ -70,7 +89,8 @@ exports.getAll = (Model) => catchAsync(async (req, res, next) => {
   // pour autoriser nested GET reviews on tour ; uniquement utile pour les reviews
   let filter = {};
   if (req.params.userrecipesid) filter = { user: req.params.userrecipesid }
-  // if (req.params.tourId) filter = { tour: req.params.tourId }
+
+  console.log(req.query)
 
   const features = new APIFeatures(Model.find(filter), req.query)
     .filter()
