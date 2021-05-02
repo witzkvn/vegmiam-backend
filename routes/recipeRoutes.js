@@ -36,7 +36,7 @@ router
 // all routes below have doc protection : requester can only manipulate his own documents
 router
   .route('/modify/:id')
-  .patch(authController.onlyUserDoc(Recipe), recipeController.updateRecipe)
+  .patch(authController.onlyUserDoc(Recipe), recipeController.uploadRecipeImages, recipeController.resizeRecipeImages, recipeController.updateRecipe)
 
 router
   .route('/delete/:id')

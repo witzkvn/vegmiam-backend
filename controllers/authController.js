@@ -123,7 +123,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 })
 
 exports.onlyUserDoc = (Model) => catchAsync(async (req, res, next) => {
+  console.log(req.params.id)
   const doc = await Model.findById(req.params.id)
+
+  console.log(doc)
+  console.log(req.user)
 
   if (!doc) {
     return next(new AppError('Aucun document trouvé avec cet ID.', 404))

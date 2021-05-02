@@ -17,6 +17,20 @@ exports.deleteOne = Model => catchAsync(async (req, res, next) => {
 
 
 exports.updateOne = Model => catchAsync(async (req, res, next) => {
+  console.log(req.body)
+  if (req?.body?.ingredients) {
+    const parsedIng = JSON.parse(req.body.ingredients)
+    req.body.ingredients = parsedIng
+  }
+  if (req?.body?.ingredients) {
+    const parsedSteps = JSON.parse(req.body.steps)
+    req.body.steps = parsedSteps
+  }
+
+  if (req?.files?.images) {
+    req.body.images = req.files.images
+  }
+
   const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
@@ -50,7 +64,6 @@ exports.createOne = (Model, addFieldOptions) => catchAsync(async (req, res, next
     const parsedSteps = JSON.parse(req.body.steps)
     req.body.steps = parsedSteps
   }
-  console.log('req files images arr :', req.files.images)
 
   if (req.files.images) {
     req.body.images = req.files.images
@@ -89,8 +102,6 @@ exports.getAll = (Model) => catchAsync(async (req, res, next) => {
   // pour autoriser nested GET reviews on tour ; uniquement utile pour les reviews
   let filter = {};
   if (req.params.userrecipesid) filter = { user: req.params.userrecipesid }
-
-  console.log(req.query)
 
   const features = new APIFeatures(Model.find(filter), req.query)
     .filter()

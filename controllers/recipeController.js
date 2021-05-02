@@ -39,8 +39,6 @@ cloudinary.config({
 });
 
 exports.resizeRecipeImages = catchAsync(async (req, res, next) => {
-  // console.log(req.body)
-  // console.log(req.files.images)
   if (!req.files.images) return next()
 
   // must set filename on the req to get it in updateMe
@@ -48,17 +46,13 @@ exports.resizeRecipeImages = catchAsync(async (req, res, next) => {
   const dateNow = Date.now()
 
   await Promise.all(req.files.images.map(async (img, index) => {
-    // console.log(img)
     const uniqueFileName = `recipe-${req.user.id}-${dateNow}-${index}`
     try {
       let result = await uploadFromBuffer(img.buffer, req.user.id, uniqueFileName);
-      // console.log(result)
       await imagesUrlArray.push(result.secure_url);
-      console.log(imagesUrlArray)
-      console.log(result.secure_url)
 
     } catch (error) {
-      console.log(error)
+      console.log(error.response)
       throw error;
     }
   }))
