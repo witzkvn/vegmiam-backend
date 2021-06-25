@@ -37,7 +37,7 @@ const recipeSchema = new mongoose.Schema({
   time: {
     type: Number,
     min: [0, "Le temps de préparation de la recette doit être supérieur à 0 minutes."],
-    max: [4320, "Le temps de préparation d'une recette ne peut pas dépasser 3 jours. Merci de sélectionner un temps inférieur à 4320 minutes."],
+    max: [4320, "Le temps de préparation d'une recette ne doit pas dépasser 3 jours. Merci de sélectionner un temps inférieur à 4320 minutes."],
     required: [true, "Merci de préciser un temps de préparation, en minutes."]
   },
   category: {

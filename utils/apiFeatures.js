@@ -42,8 +42,9 @@ class APIFeatures {
   }
 
   paginate() {
-    const page = this.queryString.page * 1 || 1; // *1 = conversion in number; by default 1
-    const limit = this.queryString.limit * 1 || 100; // 100 document per page
+    const page = this?.queryString?.page * 1 || 1; // *1 = conversion in number; by default 1
+    // const limit = this.queryString.limit * 1 || 100; // 100 document per page
+    const limit = 15;
     const skip = (page - 1) * limit; // calcul du nb d'items à ignorer
     this.query = this.query.skip(skip).limit(limit)
 

@@ -110,10 +110,14 @@ exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     .paginate()
   // const doc = await features.query.explain();
   const doc = await features.query;
+  const count = await Model.countDocuments()
+  console.log(count)
 
   res.status(200).json({
     status: 'success',
     results: doc.length,
+    totalPages: Math.ceil(count / 15),
+    page: req?.query?.page * 1 || 1,
     data: {
       data: doc
     }

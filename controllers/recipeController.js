@@ -5,6 +5,7 @@ const streamifier = require('streamifier')
 const multer = require('multer')
 const cloudinary = require('cloudinary').v2
 const User = require('../models/userModel')
+const APIFeatures = require('../utils/apiFeatures')
 
 const multerStorage = multer.memoryStorage();
 
@@ -122,13 +123,17 @@ exports.getUserFavRecipes = catchAsync(async (req, res, next) => {
 
   const userFavIds = req.user.favorites;
 
-  const favRecipes = await Recipe.find({ "_id": { $in: [...userFavIds] } })
+  // const favRecipes = await Recipe.find({ "_id": { $in: [...userFavIds] } });
+  const favRecipes = new APIFeatures(Recipe.find({ "_id": { $in: [...userFavIds] } })).paginate();
+  const doc = await favRecipes.query;
 
   res.status(200).json({
     status: 'success',
-    results: favRecipes.length,
+    results: doc.length,
+    totalPages: Math.ceil(doc.length / 15),
+    page: req?.query?.page * 1 || 1,
     data: {
-      data: favRecipes
+      data: doc
     },
   });
 })
